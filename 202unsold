@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+## 202unsold.py for  in /home/tetard/EPITECH_Y2/maths/202unsold
+## 
+## Made by benjamin girard
+## Login   <tetard@epitech.net>
+## 
+## Started on  Mon Feb 27 14:49:06 2017 benjamin girard
+## Last update Thu Mar  9 11:06:00 2017 benjamin girard
+##
+
+import collections
+import sys
+
+from errors import check_err
+
+from calc import compute_proba
+from print_res import print_sum_res, print_distrib_res, print_exp_var
+
+import plotly
+from plotly.graph_objs import *
+
+def interface(z_res):
+    z_distrib = Scatter(
+        x=[i for i in range(10, 110, 10)],
+        y=z_res['z'],
+        name="Z distribution"
+    )
+    y_distrib = Scatter(
+        x=[i for i in range(10, 60, 10)],
+        y=z_res['y'],
+        name="Y distribution"
+    )
+    x_distrib = Scatter(
+        x=[i for i in range(10, 60, 10)],
+        y=z_res['x'],
+        name="X distribution"
+    )
+    data = Data([x_distrib, y_distrib, z_distrib])
+    plotly.offline.plot(
+        data,
+        filename='Distribution'
+    )
+
+if __name__ == '__main__':
+    proba_res = collections.OrderedDict()
+    args = check_err()
+    if args is None:
+        sys.exit(84)
+    for y in range(10, 60, 10):
+        proba_res[y] = collections.OrderedDict(
+            [(x, compute_proba(args[0], args[1], x, y)) for x in range(10, 60, 10)]
+        )
+    z_res = print_sum_res(proba_res)
+    z_res['z'] = print_distrib_res(proba_res)
+    print_exp_var(proba_res, z_res)
+    interface(z_res)
